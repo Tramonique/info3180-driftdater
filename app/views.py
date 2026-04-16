@@ -5,9 +5,10 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app
-from flask import render_template, request, jsonify, send_file
-import os
+from app import app, db
+from app.models import User
+from flask import render_template, request, jsonify, session
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 ###
@@ -18,6 +19,81 @@ import os
 def index():
     return jsonify(message="This is the beginning of our API")
 
+@app.route('/api/test', methods=['GET'])
+def test():
+    return jsonify(message="Backend is working"), 200
+
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    data = request.get_json()
+
+    if not data:
+        return jsonify(error="bad_request", message="No data provided"), 400
+
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "").strip()
+
+    if not email or not password:
+        return jsonify(error="bad_request", message="Email and password are required"), 400
+
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify(error="conflict", message="Email already exists"), 409
+
+    password_hash = generate_password_hash(password)
+
+    new_user = User(email=email, password_hash=password_hash)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify(message="User registered successfully"), 201
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+
+    if not data:
+        return jsonify(error="bad_request", message="No data provided"), 400
+
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "").strip()
+
+    if not email or not password:
+        return jsonify(error="bad_request", message="Email and password are required"), 400
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user or not check_password_hash(user.password_hash, password):
+        return jsonify(error="unauthorized", message="Invalid email or password"), 401
+
+    session["user_id"] = user.id
+    session["email"] = user.email
+
+    return jsonify(message="Login successful", user={"id": user.id, "email": user.email}), 200
+
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify(message="Logout successful"), 200
+
+
+@app.route('/api/check-auth', methods=['GET'])
+def check_auth():
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return jsonify(authenticated=False), 200
+
+    return jsonify(
+        authenticated=True,
+        user={
+            "id": session.get("user_id"),
+            "email": session.get("email")
+        }
+    ), 200
 
 ###
 # The functions below should be applicable to all Flask apps.
