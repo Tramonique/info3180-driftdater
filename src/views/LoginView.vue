@@ -1,9 +1,24 @@
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-/*const email = ref('')
+const email = ref('')
 const Password = ref('')
-const register = ref('Sign up here')*/
+const router = useRouter()
+
+async function login() {
+  const response = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.value, password: Password.value })
+  })
+  const data = await response.json()
+  if (response.ok) {
+    router.push('/dashboard')
+  } else {
+    alert(data.message)
+  }
+}
 </script>
 
 <template>
@@ -14,8 +29,7 @@ const register = ref('Sign up here')*/
             <input v-model="email"/> <br>
             <label>Password</label> 
             <input type="password" v-model="Password"/>
-            <button class="login">Log in</button>
-            <!--Redirect to register page if user does not have an account-->
+            <button class="login" @click="login">Log in</button>
             <p> Don't have an account?<router-link to="/register"> Sign up here</router-link></p>
         </div>
     </div>
@@ -39,7 +53,6 @@ h1{
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     background-color: #ffffff;
     border: 1px groove #000000;
     border-radius: 5px;

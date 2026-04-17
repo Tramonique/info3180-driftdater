@@ -1,8 +1,24 @@
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-/*const email = ref('')
-const Password = ref('')*/
+const email = ref('')
+const Password = ref('')
+const router = useRouter()
+
+async function register() {
+  const response = await fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.value, password: Password.value })
+  })
+  const data = await response.json()
+  if (response.ok) {
+    router.push('/login')
+  } else {
+    alert(data.message)
+  }
+}
 </script>
 
 <template>
@@ -13,7 +29,7 @@ const Password = ref('')*/
             <input v-model="email"/> <br>
             <label>Password</label> 
             <input type="password" v-model="Password"/>
-            <button class="login">Sign up</button>
+            <button class="login" @click="register">Sign up</button>
         </div>
     </div>
 </template>
@@ -36,7 +52,6 @@ h1{
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     background-color: #ffffff;
     border: 1px groove #000000;
     border-radius: 5px;
