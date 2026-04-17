@@ -14,7 +14,7 @@ async function login() {
   })
   const data = await response.json()
   if (response.ok) {
-    router.push('/dashboard')
+    router.push('/') //Temporary reroute to home. Reroute to dashboard when set up
   } else {
     alert(data.message)
   }
