@@ -37,6 +37,9 @@
               <li class="nav-item"> <!--Matches navigation heading-->
                 <RouterLink to="/matches" class="nav-link" exact-active-class="active">Matches</RouterLink>
               </li>
+              <li class="nav-item"> <!--Search navigation heading-->
+                <RouterLink to="/search" class="nav-link" exact-active-class="active">Search</RouterLink>
+              </li>
             </template>
           </ul>
         </div>
