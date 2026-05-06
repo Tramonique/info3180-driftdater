@@ -7,19 +7,49 @@ const age = ref('')
 const bio = ref('')
 const location = ref('')
 const interests = ref('')
+const photo = ref(null)
 const router = useRouter()
 
+function fileUpload(event){
+  photo.value = event.target.files[0]
+}
+
 async function createProfile() {
-  const response = await fetch('/api/profiles', {
+  try{
+    const response = await fetch('/api/profiles', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ full_name: full_name.value, age: age.value, bio: bio.value, location: location.value, interests: interests.value })
-  })
-  const data = await response.json()
-  if (response.ok) {
+    })
+
+    const data = await response.json()
+    if (!response.ok) {
+      alert(data.message)
+      return
+    }
+
+    const user_id = data.user_id
+  
+    if(photo.value){
+      const formData = new FormData()
+      formData.append('photo', photo.value)
+
+      const responsePicture = await fetch('/api/profiles/${user_id}/photo',{
+        method: 'POST',
+        body: formData
+      })
+
+      const dataPicture = await responsePicture.json()
+
+      if (!responsePicture.ok){
+        alert(dataPicture.message)
+        return
+      }
+    }
     router.push('/login')
-  } else {
-    alert(data.message)
+  } catch(error){
+    console.error(error)
+    alert('Something went wrong')
   }
 }
 </script>
@@ -29,10 +59,11 @@ async function createProfile() {
         <h1>Create Profile</h1>
         <div class="profileCard">
             <div class="labelValue"><label><strong>Full Name</strong></label> <input v-model="full_name"/></div>
-            <div class="labelValue"><label><strong>Date of Birth</strong></label> <input type="date" v-model="age"/></div>
+            <div class="labelValue"><label><strong>Date of Birth</strong></label> <input type="number" v-model.number="age"/></div>
             <div class="labelValue"><label><strong>Occupation</strong></label> <input v-model="bio"/></div>
             <div class="labelValue"><label><strong>Address</strong></label> <input v-model="location"/></div>
             <div class="labelValue"><label><strong>Interests</strong></label> <textarea v-model="interests"></textarea></div>
+            <div class="labelValue"><label><strong>Picture of Yourself</strong></label> <input type="file" @change="fileUpload"/></div>
             <button class="create" @click="createProfile">Create Profile</button>
         </div>
     </div>
