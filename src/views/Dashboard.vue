@@ -1,10 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-const current_User = ref() //Holds the current users profile information
+const current_User = ref(null) //Holds the current users profile information
 const profiles = ref([]) //Holds all the potential matching profiles
 const loading = ref(false)
 const error = ref(null)
+const router = useRouter()
 
 /*Getting and handling current user profile*/ 
 const currentProfile = async() => {
@@ -19,19 +21,18 @@ const currentProfile = async() => {
         const data = await response.json()
         current_User.value = data
     } catch (err){
-        error.value - err.message
+        error.value = err.message
     } finally {
         loading.value = false
     }
 }
-onMounted(currentProfile)
 
 /*Getting and handling of potential profiles that best match with current user. Data is fetched from views.py discover route*/ 
 const fetchProfiles = async() => {
     loading.value = true
     error.value = null
     try{
-        const response = await fetch('http://localhost:8000/api/discover/')
+        const response = await fetch('/api/discover/')
         if (!response.ok){
             throw new Error('Failed to fetch profiles')
         }
@@ -44,7 +45,55 @@ const fetchProfiles = async() => {
         loading.value = false
     }
 }
-onMounted(fetchProfiles)
+
+//Handling user like button
+const likeUser = async(userID) => {
+    try{
+        const response = await fetch('/api/profiles/${userID}/like', {
+            method: 'POST'
+        })
+        const data = await response.json()
+
+        if (!response.ok){
+            alert(data.message)
+            return
+        }
+        if (data.matched){
+            alert("It's a match")
+        }
+
+        profiles.value = profiles.value.filter(p => p.user_id !== userID)
+    } catch (err){
+        console.error(err)
+    }
+}
+
+//Handling user pass button
+const passUser = async(userID) => {
+    try{
+        const response = await fetch('/api/profiles/${userID}/pass', {
+            method: 'POST'
+        })
+        const data = await response.json()
+
+        if (!response.ok){
+            alert(data.message)
+            return
+        }
+
+        profiles.value = profiles.value.filter(p => p.user_id !== userID)
+    } catch (err){
+        console.error(err)
+    }
+}
+
+//Edit Profile
+
+
+onMounted(() => {
+    currentProfile()
+    fetchProfiles()
+})
 </script>
 
 <template>
@@ -53,21 +102,21 @@ onMounted(fetchProfiles)
         <p v-if="error">{{ error }}</p>
 
         <!--Current User Display Section-->
-        <div class="userProfile" v-if="!loading && !errors">
+        <div class="userProfile" v-if="!loading && !error">
             <img :src="current_User.profile_picture" :alt="current_User.full_name">
             <div class="info">
                 <h2 class="userTitle">Welcome, {{current_User.full_name}}!</h2>
                 <p class="Labels"><strong>Age: </strong> {{ current_User.age }}</p> 
                 <p class="Labels"><strong>Location: </strong> {{ current_User.location }}</p>
                 <p class="Labels"><strong>Bio: </strong> {{ current_User.bio }}</p>
-                <button class="editBtn"> Edit Profile</button>
+                <button class="editBtn" @click="editProfile"> Edit Profile</button>
             </div>
         </div>
         
         <!--Possible Matching Profiles Section-->
         <h1> Browse Potential Matches</h1>
         <div class="matches">
-            <ul v-if="!loading && !errors"> 
+            <ul v-if="!loading && !error"> 
                 <li v-for="(profile, index) in profiles" v-if="index < 10" :key="profile.user_id">
                     <div class="profile">
                         <img :src="profile.profile_picture" :alt="profile.full_name">
@@ -77,7 +126,7 @@ onMounted(fetchProfiles)
                             <p class="matchScore">Match Score: {{ profile.match_score }}</p>
                         </div>
                         <div class="actions">
-                            <button class="likeBtn">Like</button> <button class="dislikeBtn">Pass</button>
+                            <button class="likeBtn" @click="likeUser(profile.user_id)">Like</button> <button class="dislikeBtn" @click="passUser(profile.user_id)">Pass</button>
                         </div>
                     </div>
                 </li>
