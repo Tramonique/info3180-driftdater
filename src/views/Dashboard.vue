@@ -11,7 +11,7 @@ const currentProfile = async() => {
     loading.value = true
     error.value = null
     try{
-        const response = await fetch('http://localhost:8000/api/profiles/<int:user_id>')
+        const response = await fetch('/api/profiles/<int:user_id>')
         if (!response.ok){
             throw new Error('Failed to fetch current user profile')
         }
