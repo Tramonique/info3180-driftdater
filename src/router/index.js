@@ -6,6 +6,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Matches from '../views/Matches.vue'
 import Profile from '../views/Profile.vue'
 import MessageCenter from '../views/MessageCenter.vue'
+import SearchView from '../views/SearchView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,29 +31,35 @@ const router = createRouter({
       component: LoginView
     },
     {
-      //Routing for register page: used in Login.vue
+      //Register page: used in Login.vue
       path: '/register',
       component: RegisterView
     },
     {
-      //Routing for dashboard page(main interactive screen after log in)
+      //Dashboard page(main interactive screen after log in)
       path: '/dashboard',
       component: Dashboard
     },
     {
-      //Routhing for page displaying all matched individuals
+      //Page displaying all matched individuals
       path: '/matches',
       component: Matches
     },
     {
-      //Routing to create user profile
+      //To create user profile
       path: '/createprofile',
       component: Profile
     },
     {
+      //Messages page
       path: '/message/:matchID/:receiverID',
       name: 'message',
       component: MessageCenter
+    },
+    {
+      //Search specific users by a filter
+      path: '/search',
+      component: SearchView
     }
   ]
 })
