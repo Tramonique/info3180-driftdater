@@ -59,7 +59,7 @@ async function createProfile() {
         <h1>Create Profile</h1>
         <div class="profileCard">
             <div class="labelValue"><label><strong>Full Name</strong></label> <input v-model="full_name"/></div>
-            <div class="labelValue"><label><strong>Date of Birth</strong></label> <input type="number" v-model.number="age"/></div>
+            <div class="labelValue"><label><strong>Age</strong></label> <input type="number" v-model.number="age"/></div>
             <div class="labelValue"><label><strong>Occupation</strong></label> <input v-model="bio"/></div>
             <div class="labelValue"><label><strong>Address</strong></label> <input v-model="location"/></div>
             <div class="labelValue"><label><strong>Interests</strong></label> <textarea v-model="interests"></textarea></div>
