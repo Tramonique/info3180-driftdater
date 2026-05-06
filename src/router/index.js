@@ -50,7 +50,7 @@ const router = createRouter({
       component: Profile
     },
     {
-      path: 'message/:matchID/:receiverID',
+      path: '/message/:matchID/:receiverID',
       name: 'message',
       component: MessageCenter
     }
