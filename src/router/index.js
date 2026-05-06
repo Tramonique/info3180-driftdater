@@ -5,6 +5,7 @@ import RegisterView from '../views/RegisterView.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Matches from '../views/Matches.vue'
 import Profile from '../views/Profile.vue'
+import MessageCenter from '../views/MessageCenter.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +48,11 @@ const router = createRouter({
       //Routing to create user profile
       path: '/createprofile',
       component: Profile
+    },
+    {
+      path: 'message/:matchID/:receiverID',
+      name: 'message',
+      component: MessageCenter
     }
   ]
 })
