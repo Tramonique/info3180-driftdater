@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Matches from '../views/Matches.vue'
+import Profile from '../views/Profile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,11 @@ const router = createRouter({
       //Routhing for page displaying all matched individuals
       path: '/matches',
       component: Matches
+    },
+    {
+      //Routing to create user profile
+      path: '/createprofile',
+      component: Profile
     }
   ]
 })
