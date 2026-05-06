@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import Dashboard from '../views/Dashboard.vue'
+import Matches from '../views/Matches.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +31,16 @@ const router = createRouter({
       //Routing for register page: used in Login.vue
       path: '/register',
       component: RegisterView
+    },
+    {
+      //Routing for dashboard page(main interactive screen after log in)
+      path: '/dashboard',
+      component: Dashboard
+    },
+    {
+      //Routhing for page displaying all matched individuals
+      path: '/matches',
+      component: Matches
     }
   ]
 })

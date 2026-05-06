@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 const email = ref('')
 const Password = ref('')
 const router = useRouter()
+const auth = inject("auth");
 
 async function login() {
   const response = await fetch('/api/login', {
@@ -14,7 +15,8 @@ async function login() {
   })
   const data = await response.json()
   if (response.ok) {
-    router.push('/') //Temporary reroute to home. Reroute to dashboard when set up
+    auth.login(data.user)
+    router.push('/dashboard')
   } else {
     alert(data.message)
   }
