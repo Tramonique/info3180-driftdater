@@ -21,7 +21,7 @@
               <RouterLink to="/" class="nav-link" exact-active-class="active">Home</RouterLink>
             </li>
 
-            <template v-if="auth.isAuthenticated">
+            <template v-if="!auth.isAuthenticated">
               <li class="nav-item">
                 <RouterLink to="/about" class="nav-link" exact-active-class="active">About</RouterLink>
               </li>
@@ -33,6 +33,9 @@
             <template v-else>
               <li class="nav-item"> <!--Dashboard navigation heading-->
                 <RouterLink to="/dashboard" class="nav-link" exact-active-class="active">Dashboard</RouterLink>
+              </li>
+              <li class="nav-item"> <!--Matches navigation heading-->
+                <RouterLink to="/matches" class="nav-link" exact-active-class="active">Matches</RouterLink>
               </li>
             </template>
           </ul>
