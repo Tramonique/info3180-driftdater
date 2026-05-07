@@ -199,6 +199,10 @@ def edit_profile(user_id):
         profile.full_name = data["full_name"]
     if "age" in data:
         profile.age = data["age"]
+    if "gender" in data:
+        if data["gender"] not in VALID_GENDERS:
+            return jsonify(error="bad_request", message="Invalid gender selected"), 400
+        profile.gender = data["gender"]
     if "bio" in data:
         profile.bio = data["bio"]
     if "location" in data:
@@ -215,6 +219,10 @@ def edit_profile(user_id):
         profile.preferred_age_min = data["preferred_age_min"]
     if "preferred_age_max" in data:
         profile.preferred_age_max = data["preferred_age_max"]
+    if "preferred_gender" in data:
+        if data["preferred_gender"] not in VALID_PREFERRED_GENDERS:
+            return jsonify(error="bad_request", message="Invalid preferred gender selected"), 400
+        profile.preferred_gender = data["preferred_gender"]
     if "preferred_location" in data:
         profile.preferred_location = data["preferred_location"]
     if "preferred_radius" in data:
