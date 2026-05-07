@@ -86,6 +86,7 @@ async function createProfile() {
     align-items: center;
     justify-content: center;
     padding: 20px;
+    min-height: 100vh;
 }
 
 .profileCard {
@@ -94,10 +95,11 @@ async function createProfile() {
     align-items: center;
     justify-content: center;
     width: 50%;
-    height: 100vh;
-    gap: 40px;
+    max-width: 800px;
+    min-width: 500px;
+    gap: 50px;
     background: #fff;
-    padding: 15px;
+    padding: 40px;
     border-radius: 12px;
     margin-bottom: 15px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -113,6 +115,12 @@ button {
     background-color: #bd0084;
 }
 
+.labelValue{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
 input, textarea {
     width: 40ch;
 }
@@ -124,7 +132,7 @@ input, textarea {
     .profileCard {
         width: 65%;
         min-width: unset;
-        padding: 35px 25px;
+        padding: 35px;
     }
 
     label { font-size: 1.6rem; }
@@ -143,16 +151,14 @@ input, textarea {
 
     .profileCard {
       width: 100%;
-      padding: 2px;
       border-radius: 8px;
     }
 
     label { font-size: 1.2rem; }
 
     input, textarea {
-      padding: 10px;
+      padding: 5px;
       font-size: 0.95rem;
-      width: auto;
     }
 
     button {
