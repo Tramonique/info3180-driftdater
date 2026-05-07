@@ -60,9 +60,7 @@ async function register() {
     gap: 30px;
     height: 100vh;
 }
-h1{
-    font-size: 4rem;
-}
+h1{ font-size: 4rem; }
 .signupCard{
     display: flex;
     flex-direction: column;
@@ -81,7 +79,50 @@ button{
     margin-top: 2%;
     background: linear-gradient(to right, #E3A3A3, #FFF1A8)
 }
-label{
-    font-size: 2rem;
+label{ font-size: 2rem; }
+
+/*Tablet layout*/
+@media (max-width: 1024px) {
+    h1 { font-size: 3rem; }
+
+    .signupCard {
+        width: 65%;
+        min-width: unset;
+        padding: 35px 25px;
+    }
+
+    label { font-size: 1.6rem; }
+
+    button { width: 60%; }
+}
+
+/*Phone Layout */
+@media (max-width: 600px) {
+    .container {
+      gap: 20px;
+      padding: 15px;
+    }
+
+    h1 { font-size: 2.3rem; }
+
+    .signCard {
+      width: 100%;
+      padding: 25px 20px;
+      border-radius: 8px;
+    }
+
+    label { font-size: 1.2rem; }
+
+    input {
+      padding: 10px;
+      font-size: 0.95rem;
+    }
+
+    button {
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    p { font-size: 0.9rem; }
 }
 </style>
