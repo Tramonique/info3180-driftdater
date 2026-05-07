@@ -13,14 +13,14 @@ let message = ref("Drift Dater")
       </div>
       <section>
         <div class="ft">
-          <img src="/assets/Recommended.jpg" alt="Recommended match" class="WebDetails">
+          <img src="../assets/Recommended.jpeg" alt="Recommended match" class="WebDetails">
           <h2 class="subject">Get recommended your perfect match</h2>
           <p class="text">Our smart matching system learns your preferences, interests, and vibe to connect you 
             with people who feel naturally compatible. Spend less time searching and more time meeting 
             meaningful connections that just make sense.</p>
         </div>
         <div class="ft">
-          <img src="/assets/Choose.jpg" alt="Recommended match" class="WebDetails">
+          <img src="../assets/Choose.jpg" alt="Like or pass" class="WebDetails">
           <h2 class="subject">Choose what feels right</h2>
           <p class="text">Make your choice with confidence using simple actions like: like, dislike, or pass. 
             Each swipe helps refine your preferences, allowing the app to better understand your type and 
@@ -28,7 +28,7 @@ let message = ref("Drift Dater")
             discovering people who truly fit your vibe.</p>
         </div>
         <div class="ft">
-          <img src="/assets/Messaging.jpg" alt="Chat comfortably" class="WebDetails">
+          <img src="../assets/Messaging.jpg" alt="Chat comfortably" class="WebDetails">
           <h2 class="subject">Smooth messaging</h2>
           <p class="text">Start conversations naturally and without pressure. Our chat experience is designed to 
             feel smooth, friendly, and effortless so you can focus on getting to know your match. 
@@ -36,14 +36,14 @@ let message = ref("Drift Dater")
             simpler or more comfortable.</p>
         </div>
         <div class="ft">
-          <img src="/assets/Search.jpg" alt="Search with filters" class="WebDetails">
+          <img src="../assets/Search.jpg" alt="Search with filters" class="WebDetails">
           <h2 class="subject">Still not finding the one?</h2>
           <p class="text">Use our advanced search tools to refine your preferences and discover more compatible 
             matches. Filter by what matters most to you and take control of your dating experience 
             to find someone who truly fits your vibe.</p>
         </div>
         <div class="ft">
-          <img src="/assets/RightOne.jpg" alt="Find your match" class="WebDetails">
+          <img src="../assets/RightOne.jpg" alt="Find your match" class="WebDetails">
           <h2 class="subject">Find the right one for you</h2>
           <p class="text">Find the right one for you with a dating experience designed around your preferences, 
             personality, and pace. From smart recommendations to easy conversations and advanced 
@@ -62,7 +62,7 @@ section{
   align-items: center;
   gap: 20px;
   background: #bfa6bf;
-  padding: 15px;
+  padding: 5px;
   border-radius: 12px;
   margin-bottom: 15px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
@@ -84,16 +84,102 @@ section{
 
 .WebDetails{
   grid-area: image;
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
+  max-width: 100%;
+  height: 60%;
   object-fit: cover;
+  place-self: center;
 }
 .subject{
   grid-area: title;
+  place-self: center;
+  align-self: end;
 }
 
 .text{
   grid-area: text;
+  align-items: start;
+}
+
+/*Tablet layout styling (600px - 1024px)*/
+@media (max-width: 1024px) {
+  .text-center {
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .ft {
+    grid-template-columns: 90px 1fr;
+    padding: 12px;
+  }
+
+  .WebDetails {
+    width: 90px;
+    height: 90px;
+  }
+
+  .subject {
+    font-size: 1.15rem;
+  }
+
+  .text {
+    font-size: 0.95rem;
+  }
+}
+
+/*Phone layout styling (300px - 600px)*/
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  .text-center {
+    h1 {
+      font-size: 1.7rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+
+    .logo {
+      width: 90px;
+      height: 90px;
+    }
+  }
+
+  section {
+    padding: 12px;
+    gap: 15px;
+  }
+  .ft {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "title"
+      "text";
+
+    text-align: center;
+    justify-items: center;
+    padding: 15px;
+  }
+
+  .WebDetails {
+    width: 120px;
+    height: 120px;
+  }
+
+  .subject {
+    font-size: 1.1rem;
+  }
+
+  .text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
 }
 </style>
