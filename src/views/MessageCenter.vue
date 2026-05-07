@@ -1,49 +1,43 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const matchId = ref(route.params.matchID)        // current conversation
-const receiverId = ref(route.params.receiverID)     // user being chat with
+const auth = inject('auth')
+const matchId = ref(route.params.matchID)
+const receiverId = ref(parseInt(route.params.receiverID))
 const messages = ref([])
 const newMessage = ref('')
-const loading = ref(false)
 
-//Fetch messages
 async function fetchMessages() {
   if (!matchId.value) return
-
   try {
-    const res = await fetch(`/api/matches/${matchId.value}/messages`)
+    const res = await fetch(`/api/matches/${matchId.value}/messages`, {
+      credentials: 'include'
+    })
     const data = await res.json()
-
-    if (res.ok) {
-      messages.value = data.messages
-    }
+    if (res.ok) messages.value = data.messages
   } catch (err) {
     console.error(err)
   }
 }
 
-//Send message
 async function sendMessage() {
   if (!newMessage.value.trim()) return
-
   try {
     const res = await fetch('/api/messages', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         receiver_id: receiverId.value,
         content: newMessage.value
       })
     })
-
     const data = await res.json()
-
     if (res.ok) {
       newMessage.value = ''
-      fetchMessages() // refresh
+      fetchMessages()
     } else {
       alert(data.message)
     }
@@ -52,13 +46,9 @@ async function sendMessage() {
   }
 }
 
-//Polling for "real-time"
 onMounted(() => {
   fetchMessages()
-
-  setInterval(() => {
-    fetchMessages()
-  }, 3000) 
+  setInterval(fetchMessages, 3000)
 })
 </script>
 
@@ -67,14 +57,16 @@ onMounted(() => {
     <div class="chatContainer">
       <h2>Messages</h2>
       <div class="chatBox">
-        <div v-for="msg in messages" :key="msg.id" :class="['message', msg.sender_id === receiverId ? 'received' : 'sent']">
+        <div
+          v-for="msg in messages"
+          :key="msg.id"
+          :class="['message', msg.sender_id === auth.user.value?.id ? 'sent' : 'received']"
+        >
+          <div class="senderName">{{ msg.sender_id === auth.user.value?.id ? 'You' : 'Them' }}</div>
           <div class="content">{{ msg.content }}</div>
-          <div class="time">
-            {{ new Date(msg.created_at).toLocaleTimeString() }}
-          </div>
+          <div class="time">{{ new Date(msg.created_at).toLocaleTimeString() }}</div>
         </div>
       </div>
-
       <div class="inputArea">
         <input v-model="newMessage" placeholder="Type a message..." @keyup.enter="sendMessage"/>
         <button @click="sendMessage">Send</button>
@@ -84,63 +76,81 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.chat {
-  min-height: 100vh;
-  background: linear-gradient(to right, #6a0dad, #9b59b6);
+.body {
+  padding: 20px;
+}
+
+.chatContainer {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.chatBox {
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
 
-  .chatBox {
-    width: 70%;
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
+.message {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 10px;
 
-    .messages {
-      height: 300px;
-      overflow-y: auto;
-      margin-bottom: 1rem;
+  &.sent {
+    background: #6a0dad;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+  }
 
-      .message {
-        max-width: 60%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 10px;
+  &.received {
+    background: #eee;
+    color: #333;
+    margin-right: auto;
+  }
 
-        &.sent {
-          background: #6a0dad;
-          color: white;
-          margin-left: auto;
-        }
+  .senderName {
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 3px;
+    opacity: 0.8;
+  }
 
-        &.received {
-          background: #eee;
-        }
+  .time {
+    font-size: 0.7rem;
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+}
 
-        .time {
-          font-size: 0.7rem;
-          margin-top: 4px;
-        }
-      }
-    }
+.inputArea {
+  display: flex;
+  gap: 10px;
 
-    .inputArea {
-      display: flex;
-      gap: 10px;
+  input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
 
-      input {
-        flex: 1;
-        padding: 10px;
-      }
-
-      button {
-        background: #6a0dad;
-        color: white;
-        border: none;
-        padding: 10px;
-      }
-    }
+  button {
+    background: #6a0dad;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
   }
 }
 </style>

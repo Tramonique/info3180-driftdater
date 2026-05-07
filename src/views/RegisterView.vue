@@ -1,22 +1,39 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 const email = ref('')
 const Password = ref('')
 const router = useRouter()
+const auth = inject('auth')
 
 async function register() {
   const response = await fetch('/api/register', {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: email.value, password: Password.value })
   })
   const data = await response.json()
-  if (response.ok) {
+  if (!response.ok) {
+    alert(data.message)
+    return
+  }
+
+  // Auto login after register
+  const loginResponse = await fetch('/api/login', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.value, password: Password.value })
+  })
+  const loginData = await loginResponse.json()
+  if (loginResponse.ok) {
+    auth.login(loginData.user)
     router.push('/createprofile')
   } else {
-    alert(data.message)
+    alert('Registered but login failed. Please log in manually.')
+    router.push('/login')
   }
 }
 </script>

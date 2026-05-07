@@ -10,6 +10,7 @@ const auth = inject("auth");
 async function login() {
   const response = await fetch('/api/login', {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: email.value, password: Password.value })
   })
@@ -27,18 +28,18 @@ async function login() {
     <div class="container">
         <h1>Log In</h1>
         <div class="loginCard">
-            <label>Email</label> 
-            <input v-model="email"/> <br>
-            <label>Password</label> 
-            <input type="password" v-model="Password"/>
+            <label>Email</label>
+            <input v-model="email" /> <br>
+            <label>Password</label>
+            <input type="password" v-model="Password" />
             <button class="login" @click="login">Log in</button>
-            <p> Don't have an account?<router-link to="/register"> Sign up here</router-link></p>
+            <p>Don't have an account?<router-link to="/register"> Sign up here</router-link></p>
         </div>
     </div>
 </template>
 
 <style scoped>
-.container{
+.container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -46,10 +47,8 @@ async function login() {
     gap: 30px;
     height: 100vh;
 }
-h1{
-    font-size: 4rem;
-}
-.loginCard{
+h1 { font-size: 4rem; }
+.loginCard {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -62,12 +61,10 @@ h1{
     height: 50%;
     padding: 20px;
 }
-button{
+button {
     width: 40%;
     margin-top: 2%;
     background: linear-gradient(to right, #E3A3A3, #FFF1A8)
 }
-label{
-    font-size: 2rem;
-}
+label { font-size: 2rem; }
 </style>
