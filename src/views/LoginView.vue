@@ -45,7 +45,7 @@ async function login() {
     justify-content: center;
     align-items: center;
     gap: 30px;
-    height: 100vh;
+    min-height: 100vh;
 }
 h1 { font-size: 4rem; }
 .loginCard {
@@ -58,6 +58,7 @@ h1 { font-size: 4rem; }
     border: 1px groove #000000;
     border-radius: 5px;
     width: 40%;
+    min-width: 400px;
     height: 50%;
     padding: 20px;
 }
