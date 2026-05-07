@@ -29,12 +29,9 @@ async function login() {
     <div class="container">
         <h1>Log In</h1>
         <div class="loginCard">
-            <label>Email</label>
-            <input v-model="email" /> <br>
-            <label>Password</label>
-            <input type="password" v-model="Password" />
-            <label>Remember Me</label>
-            <input type="checkbox" v-model="remember" />
+            <label>Email <input v-model="email" /></label>
+            <label>Password <input type="password" v-model="Password" /></label>
+            <label class="rememberMe">Remember Me <input type="checkbox" v-model="remember" /></label>
             <button class="login" @click="login">Log in</button>
             <p>Don't have an account?<router-link to="/register"> Sign up here</router-link></p>
         </div>
@@ -48,7 +45,8 @@ async function login() {
     justify-content: center;
     align-items: center;
     gap: 30px;
-    min-height: 100vh;
+    height: 80vh;
+    max-height: 100vh;
 }
 h1 { font-size: 4rem; }
 .loginCard {
@@ -60,7 +58,7 @@ h1 { font-size: 4rem; }
     background-color: #ffffff;
     border: 1px groove #000000;
     border-radius: 5px;
-    width: 40%;
+    width: 50%;
     min-width: 400px;
     height: 50%;
     padding: 20px;
@@ -70,7 +68,38 @@ button {
     margin-top: 2%;
     background: linear-gradient(to right, #E3A3A3, #FFF1A8)
 }
-label { font-size: 2rem; }
+label { 
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 550px;
+    gap: 5px;
+    font-size: 1.1rem; 
+    font-weight: 600;
+    text-align: right;
+}
+.rememberMe{
+    justify-content: flex-start;
+    width: auto;
+    max-width: unset;
+    gap: 8px;
+}
+
+input{
+    width: 50%;
+    padding: 12px;
+    border: 1px solid #000000;
+    border-radius: 8px;
+    align-self: flex-start;
+}
+
+input[type="checkbox"]{
+    width: auto;
+    padding: 0;
+    margin: 0;
+    align-self: center;
+}
 
 /*Tablet layout*/
 @media (max-width: 1024px) {
