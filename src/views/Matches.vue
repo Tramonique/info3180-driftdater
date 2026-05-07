@@ -105,4 +105,58 @@ onMounted(fetchMatches)
         }
     }
 }
+
+//Tablet layout styling (600px - 1024px)
+@media (max-width: 1024px) {
+
+  .body { padding: 15px; }
+
+  .matchedProfile{
+    gap: 15px;
+    padding: 12px;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+//Phone layout styling (300px - 600px)
+@media (max-width: 600px) {
+
+  .body {padding: 10px; }
+
+  .matchedProfile {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .avatar {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    align-self: center;
+  }
+
+  .info { width: 100%; }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+  }
+
+  h1, h2, h3 { font-size: 1.2rem; }
+
+  p { font-size: 0.95rem; }
+}
 </style>
