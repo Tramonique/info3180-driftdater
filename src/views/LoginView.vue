@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 
 const email = ref('')
 const Password = ref('')
+const remember = ref(false)
 const router = useRouter()
 const auth = inject("auth");
 
@@ -12,7 +13,7 @@ async function login() {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email.value, password: Password.value })
+    body: JSON.stringify({ email: email.value, password: Password.value, remember: remember.value })
   })
   const data = await response.json()
   if (response.ok) {
@@ -32,6 +33,8 @@ async function login() {
             <input v-model="email" /> <br>
             <label>Password</label>
             <input type="password" v-model="Password" />
+            <label>Remember Me</label>
+            <input type="checkbox" v-model="remember" />
             <button class="login" @click="login">Log in</button>
             <p>Don't have an account?<router-link to="/register"> Sign up here</router-link></p>
         </div>
