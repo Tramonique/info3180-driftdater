@@ -31,13 +31,23 @@ def photo_url(filename):
     return f"/uploads/{filename}"
 
 def validate_password(password):
+    errors = []
+
     if len(password) < 8:
-        return "Password must be at least 8 characters long"
+        errors.append("Password must be at least 8 characters long")
+    if len(password) > 128:
+        errors.append("Password must be less than 128 characters long")
     if not re.search(r"\d", password):
         return "Password must include at least one number"
-    if not re.search(r"[^\w\s]", password):
-        return "Password must include at least one symbol"
-    return None
+    if not re.search(r"[A-Z]", password):
+        errors.append("Password must include at least one uppercase letter")
+    if not re.search(r"[a-z]", password):
+        errors.append("Password must include at least one lowercase letter")
+    if not re.search(r"[^A-Za-z0-9]", password):
+        errors.append("Password must include at least one symbol")
+    if re.search(r"\s", password):
+        errors.append("Password must not contain spaces")
+    return errors
 
 ###
 # Routing for your application.
@@ -65,6 +75,10 @@ def register():
     password = data.get("password", "").strip()
     if not email or not password:
         return jsonify(error="bad_request", message="Email and password are required"), 400
+    
+    password_errors = validate_password(password)
+    if password_errors:
+        return jsonify(error="bad_request", message="Password does not meet requirements", details=password_errors), 400
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
         return jsonify(error="conflict", message="Email already exists"), 409
