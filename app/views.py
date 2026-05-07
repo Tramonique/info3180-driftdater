@@ -253,9 +253,9 @@ def discover():
             "location": profile.location,
             "interests": profile.interests,
             "profile_picture": photo_url(profile.profile_picture),
-            "match_score": score
+            # CHANGED: score used only for sorting, never sent to client
         })
-    result.sort(key=lambda x: x["match_score"], reverse=True)
+    result.sort(key=lambda x: calculate_match_score(user.profile, Profile.query.filter_by(user_id=x["user_id"]).first()), reverse=True)
     return jsonify(profiles=result), 200
 
 
@@ -307,7 +307,8 @@ def like_user(user_id):
     if mutual:
         match = Match(
             user1_id=min(user.id, user_id),
-            user2_id=max(user.id, user_id)
+            user2_id=max(user.id, user_id),
+            seen=False  # ADDED: new match starts as unseen for notification badge
         )
         db.session.add(match)
         matched = True
@@ -391,6 +392,7 @@ def send_message():
         sender_id=user.id,
         receiver_id=receiver_id,
         content=content
+        # read defaults to False from model — receiver hasn't read it yet
     )
     db.session.add(message)
     db.session.commit()
@@ -452,6 +454,56 @@ def search_profiles():
         "bio": p.bio
     } for p in profiles]
     return jsonify(profiles=result), 200
+
+
+# ============================================================
+# NOTIFICATION ENDPOINTS  (Romaine)
+# ============================================================
+
+@app.route('/api/notifications/matches', methods=['GET'])
+@login_required
+def get_match_notifications():
+    # Returns count of matches the current user hasn't seen yet
+    count = Match.query.filter(
+        ((Match.user1_id == current_user.id) | (Match.user2_id == current_user.id)),
+        Match.seen == False
+    ).count()
+    return jsonify({"unread_matches": count}), 200
+
+
+@app.route('/api/notifications/matches/seen', methods=['PUT'])
+@login_required
+def mark_matches_seen():
+    # Called when user opens the Matches tab — clears the badge
+    Match.query.filter(
+        ((Match.user1_id == current_user.id) | (Match.user2_id == current_user.id)),
+        Match.seen == False
+    ).update({"seen": True}, synchronize_session=False)
+    db.session.commit()
+    return jsonify({"message": "Matches marked as seen"}), 200
+
+
+@app.route('/api/notifications/messages', methods=['GET'])
+@login_required
+def get_message_notifications():
+    # Returns count of unread messages sent to the current user
+    count = Message.query.filter_by(
+        receiver_id=current_user.id,
+        read=False
+    ).count()
+    return jsonify({"unread_messages": count}), 200
+
+
+@app.route('/api/notifications/messages/read', methods=['PUT'])
+@login_required
+def mark_messages_read():
+    # Called when user opens Messages — clears the badge
+    Message.query.filter_by(
+        receiver_id=current_user.id,
+        read=False
+    ).update({"read": True}, synchronize_session=False)
+    db.session.commit()
+    return jsonify({"message": "Messages marked as read"}), 200
 
 
 ###
