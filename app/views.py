@@ -192,7 +192,7 @@ def get_profile(user_id):
         preferred_location=profile.preferred_location,
         preferred_radius=profile.preferred_radius,
         created_at=profile.created_at.isoformat()
-        ), 200
+    ), 200
 
 
 @app.route('/api/profiles/<int:user_id>', methods=['PUT'])
