@@ -143,7 +143,7 @@ input, textarea {
 
     .profileCard {
       width: 100%;
-      padding: 25px 20px;
+      padding: 2px;
       border-radius: 8px;
     }
 
@@ -152,6 +152,7 @@ input, textarea {
     input, textarea {
       padding: 10px;
       font-size: 0.95rem;
+      width: auto;
     }
 
     button {
