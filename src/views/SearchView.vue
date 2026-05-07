@@ -111,7 +111,7 @@ onMounted(fetchProfiles)
             <ul v-if="!loading && !error">
                 <li v-for="profile in limitedProfiles" :key="profile.user_id">
                     <div class="profile">
-                        <img :src="profile.profile_picture" :alt="profile.full_name">
+                        <img :src="profile.profile_picture" :alt="profile.full_name" class="avatar">
                         <div class="info">
                             <h3>{{ profile.full_name }}, {{ profile.age }}</h3>
                             <p>{{ profile.interests }}</p>
@@ -172,11 +172,83 @@ onMounted(fetchProfiles)
         &.dislikeBtn { background-color: #c93232; }
     }
 
+    .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
     ul { list-style: none; padding: 0; margin: 0; }
 
     .matches { display: flex; flex-direction: column; gap: 15px; }
     .info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
     .actions { display: flex; gap: 10px; }
     .matchScore { color: #6c7ae0; font-weight: 500; }
+}
+
+//Tablet layout styling (600px - 1024px)
+@media (max-width: 1024px) {
+
+    .body { padding: 15px; }
+
+    .searchCard, .profile {
+        gap: 15px;
+        padding: 12px;
+    }
+
+    .avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    label { font-size: 1.6rem; }
+}
+
+//Phone layout styling (300px - 600px)
+@media (max-width: 600px) {
+
+    .body {padding: 10px; }
+
+    .searchCard, .profile {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .avatar {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+        align-self: center;
+    }
+
+    .info { width: 100%; }
+    .actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        font-size: 15px;
+    }
+
+    h1, h2, h3, label { font-size: 1.2rem; }
+
+    input {
+      padding: 10px;
+      font-size: 0.95rem;
+    }
+
+    p { font-size: 0.95rem; }
 }
 </style>

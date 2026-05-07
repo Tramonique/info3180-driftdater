@@ -85,7 +85,7 @@ onMounted(() => {
         <p v-if="error">{{ error }}</p>
 
         <div class="userProfile" v-if="!loading && !error && current_User">
-            <img :src="current_User.profile_picture" :alt="current_User.full_name">
+            <img :src="current_User.profile_picture" :alt="current_User.full_name" class="avatar">
             <div class="info">
                 <h2 class="userTitle">Welcome, {{ current_User.full_name }}!</h2>
                 <p class="Labels"><strong>Age: </strong> {{ current_User.age }}</p>
@@ -99,7 +99,7 @@ onMounted(() => {
             <ul v-if="!loading && !error">
                 <li v-for="profile in profiles.slice(0, 10)" :key="profile.user_id">
                     <div class="profile">
-                        <img :src="profile.profile_picture" :alt="profile.full_name">
+                        <img :src="profile.profile_picture" :alt="profile.full_name" class="avatar">
                         <div class="info">
                             <h3>{{ profile.full_name }}, {{ profile.age }}</h3>
                             <p>{{ profile.interests }}</p>
@@ -135,7 +135,7 @@ $dislike: #c93232;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-img {
+.avatar {
   width: 80px;
   height: 80px;
   border-radius: 10px;
