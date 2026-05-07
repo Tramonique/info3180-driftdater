@@ -116,4 +116,47 @@ button {
 input, textarea {
     width: 40ch;
 }
+
+/*Tablet layout*/
+@media (max-width: 1024px) {
+    h1 { font-size: 3rem; }
+
+    .profileCard {
+        width: 65%;
+        min-width: unset;
+        padding: 35px 25px;
+    }
+
+    label { font-size: 1.6rem; }
+
+    button { width: 60%; }
+}
+
+/*Phone Layout */
+@media (max-width: 600px) {
+    .body {
+      gap: 20px;
+      padding: 15px;
+    }
+
+    h1 { font-size: 2.3rem; }
+
+    .profileCard {
+      width: 100%;
+      padding: 25px 20px;
+      border-radius: 8px;
+    }
+
+    label { font-size: 1.2rem; }
+
+    input, textarea {
+      padding: 10px;
+      font-size: 0.95rem;
+    }
+
+    button {
+      width: 100%;
+      font-size: 1rem;
+    }
+}
 </style>
