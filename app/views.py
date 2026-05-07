@@ -12,6 +12,11 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
+import re
+
+
+VALID_GENDERS = ["Female", "Male", "Non-binary", "Other", "Prefer not to say"]
+VALID_PREFERRED_GENDERS = ["Any", "Female", "Male", "Non-binary", "Other"]
 
 ###
 # Helper Functions
@@ -24,6 +29,15 @@ def photo_url(filename):
     if not filename:
         return None
     return f"/uploads/{filename}"
+
+def validate_password(password):
+    if len(password) < 8:
+        return "Password must be at least 8 characters long"
+    if not re.search(r"\d", password):
+        return "Password must include at least one number"
+    if not re.search(r"[^\w\s]", password):
+        return "Password must include at least one symbol"
+    return None
 
 ###
 # Routing for your application.
@@ -102,10 +116,16 @@ def create_profile():
     data = request.get_json()
     if not data:
         return jsonify(error="bad_request", message="No data provided"), 400
-    required = ["full_name", "age", "bio", "location", "interests"]
+    required = ["full_name", "age", "bio", "location", "interests", "gender", "preferred_gender"]
     for field in required:
         if not data.get(field):
             return jsonify(error="bad_request", message=f"{field} is required"), 400
+    gender = data.get("gender")
+    preferred_gender = data.get("preferred_gender", "Any")
+    if gender not in VALID_GENDERS:
+        return jsonify(error="bad_request", message="Invalid gender"), 400
+    if preferred_gender not in VALID_PREFERRED_GENDERS:
+        return jsonify(error="bad_request", message="Invalid preferred gender"), 400
     profile = Profile(
         user_id=user.id,
         full_name=data.get("full_name"),
@@ -113,6 +133,8 @@ def create_profile():
         bio=data.get("bio"),
         location=data.get("location"),
         interests=data.get("interests"),
+        gender=gender,
+        preferred_gender=preferred_gender,
         custom_field_1=data.get("custom_field_1"),
         custom_field_2=data.get("custom_field_2"),
         visibility=data.get("visibility", "public"),
@@ -142,6 +164,7 @@ def get_profile(user_id):
         user_id=profile.user_id,
         full_name=profile.full_name,
         age=profile.age,
+        gender = profile.gender,
         bio=profile.bio,
         location=profile.location,
         interests=profile.interests,
@@ -151,10 +174,11 @@ def get_profile(user_id):
         visibility=profile.visibility,
         preferred_age_min=profile.preferred_age_min,
         preferred_age_max=profile.preferred_age_max,
+        preffered_gender = profile.preffered_gender
         preferred_location=profile.preferred_location,
         preferred_radius=profile.preferred_radius,
         created_at=profile.created_at.isoformat()
-    ), 200
+        ), 200
 
 
 @app.route('/api/profiles/<int:user_id>', methods=['PUT'])
@@ -249,6 +273,7 @@ def discover():
             "user_id": profile.user_id,
             "full_name": profile.full_name,
             "age": profile.age,
+            "gender": profile.gender,
             "bio": profile.bio,
             "location": profile.location,
             "interests": profile.interests,
@@ -272,6 +297,8 @@ def calculate_match_score(my_profile, other_profile):
     if my_profile.preferred_location:
         if my_profile.preferred_location.lower() in other_profile.location.lower():
             score += 20
+    if my_profile.preferred_gender == "Any" or my_profile.preferred_gender == other_profile.gender:
+        score += 20
     return round(score, 1)
 
 
@@ -428,6 +455,7 @@ def search_profiles():
     location = request.args.get("location", "").strip()
     age_min = request.args.get("age_min", type=int)
     age_max = request.args.get("age_max", type=int)
+    gender = request.args.get("gender", "").strip()
     interests = request.args.get("interests", "").strip()
     query = Profile.query.filter(
         Profile.user_id != user.id,
@@ -446,6 +474,7 @@ def search_profiles():
         "user_id": p.user_id,
         "full_name": p.full_name,
         "age": p.age,
+        "gender": p.gender,
         "location": p.location,
         "interests": p.interests,
         "profile_picture": photo_url(p.profile_picture),
