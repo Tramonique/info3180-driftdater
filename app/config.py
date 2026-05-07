@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()  # load environment variables from .env if it exists.
 
@@ -15,3 +16,4 @@ class Config(object):
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_SECURE = False  
     SESSION_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_DURATION = timedelta(days=14)
