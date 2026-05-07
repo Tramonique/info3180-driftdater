@@ -38,7 +38,7 @@ def validate_password(password):
     if len(password) > 128:
         errors.append("Password must be less than 128 characters long")
     if not re.search(r"\d", password):
-        return "Password must include at least one number"
+        errors.append("Password must include at least one number")  # ← consistent with rest
     if not re.search(r"[A-Z]", password):
         errors.append("Password must include at least one uppercase letter")
     if not re.search(r"[a-z]", password):
@@ -188,7 +188,7 @@ def get_profile(user_id):
         visibility=profile.visibility,
         preferred_age_min=profile.preferred_age_min,
         preferred_age_max=profile.preferred_age_max,
-        preffered_gender = profile.preffered_gender
+        preferred_gender = profile.preferred_gender,
         preferred_location=profile.preferred_location,
         preferred_radius=profile.preferred_radius,
         created_at=profile.created_at.isoformat()
