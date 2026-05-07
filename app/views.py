@@ -7,7 +7,7 @@ This file creates your application.
 
 from app import app, db
 from app.models import User, Profile, Interaction, Match, Message
-from flask import render_template, request, jsonify, session
+from flask import render_template, request, jsonify, session, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
@@ -23,7 +23,12 @@ def get_current_user():
     return User.query.get(user_id)
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def photo_url(filename):
+    if not filename:
+        return None
+    return f"/uploads/{filename}"
 
 ###
 # Routing for your application.
@@ -36,6 +41,11 @@ def index():
 @app.route('/api/test', methods=['GET'])
 def test():
     return jsonify(message="Backend is working"), 200
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    upload_folder = os.path.join(app.root_path, '..', 'public', 'uploads')
+    return send_from_directory(os.path.abspath(upload_folder), filename)
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -140,7 +150,7 @@ def get_profile(user_id):
         interests=profile.interests,
         custom_field_1=profile.custom_field_1,
         custom_field_2=profile.custom_field_2,
-        profile_picture=profile.profile_picture,
+        profile_picture=photo_url(profile.profile_picture),
         visibility=profile.visibility,
         preferred_age_min=profile.preferred_age_min,
         preferred_age_max=profile.preferred_age_max,
@@ -207,7 +217,7 @@ def upload_photo(user_id):
     if file.filename == '':
         return jsonify(error="bad_request", message="No file selected"), 400
     if not allowed_file(file.filename):
-        return jsonify(error="bad_request", message="File type not allowed. Use png, jpg, jpeg or gif"), 400
+        return jsonify(error="bad_request", message="File type not allowed. Use png, jpg, jpeg, gif or webp"), 400
     filename = secure_filename(f"user_{user_id}_{file.filename}")
     upload_folder = os.path.join(app.root_path, '..', 'public', 'uploads')
     os.makedirs(upload_folder, exist_ok=True)
@@ -242,7 +252,7 @@ def discover():
             "bio": profile.bio,
             "location": profile.location,
             "interests": profile.interests,
-            "profile_picture": profile.profile_picture,
+            "profile_picture": photo_url(profile.profile_picture),
             "match_score": score
         })
     result.sort(key=lambda x: x["match_score"], reverse=True)
@@ -348,7 +358,7 @@ def get_matches():
                 "full_name": other_profile.full_name,
                 "age": other_profile.age,
                 "bio": other_profile.bio,
-                "profile_picture": other_profile.profile_picture,
+                "profile_picture": photo_url(other_profile.profile_picture),
                 "matched_at": match.created_at.isoformat()
             })
     return jsonify(matches=result), 200
@@ -432,7 +442,7 @@ def search_profiles():
         "age": p.age,
         "location": p.location,
         "interests": p.interests,
-        "profile_picture": p.profile_picture,
+        "profile_picture": photo_url(p.profile_picture),
         "bio": p.bio
     } for p in profiles]
     return jsonify(profiles=result), 200
@@ -463,11 +473,6 @@ def send_text_file(file_name):
 
 @app.after_request
 def add_header(response):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also tell the browser not to cache the rendered page. If we wanted
-    to we could change max-age to 600 seconds which would be 10 minutes.
-    """
     response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
@@ -476,4 +481,4 @@ def add_header(response):
 @app.errorhandler(404)
 def page_not_found(error):
     """Custom 404 page."""
-    return render_template('404.html'), 404
+    return jsonify(error="not_found", message="Page not found"), 404
