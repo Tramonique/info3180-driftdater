@@ -8,6 +8,7 @@ This file creates your application.
 from app import app, db
 from app.models import User, Profile, Interaction, Match, Message
 from flask import render_template, request, jsonify, session, send_from_directory
+from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
@@ -15,12 +16,6 @@ import os
 ###
 # Helper Functions
 ###
-
-def get_current_user():
-    user_id = session.get("user_id")
-    if not user_id:
-        return None
-    return User.query.get(user_id)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -77,28 +72,29 @@ def login():
     user = User.query.filter_by(email=email).first()
     if not user or not check_password_hash(user.password_hash, password):
         return jsonify(error="unauthorized", message="Invalid email or password"), 401
-    session["user_id"] = user.id
-    session["email"] = user.email
+    remember = data.get("remember", False)
+    login_user(user, remember=remember)
     return jsonify(message="Login successful", user={"id": user.id, "email": user.email}), 200
 
 @app.route('/api/logout', methods=['POST'])
+@login_required
 def logout():
-    session.clear()
+    logout_user()
     return jsonify(message="Logout successful"), 200
 
 @app.route('/api/check-auth', methods=['GET'])
 def check_auth():
-    user_id = session.get("user_id")
-    if not user_id:
+    if not current_user.is_authenticated:
         return jsonify(authenticated=False), 200
     return jsonify(
         authenticated=True,
-        user={"id": session.get("user_id"), "email": session.get("email")}
+        user={"id": current_user.id, "email": current_user.email}
     ), 200
 
 @app.route('/api/profiles', methods=['POST'])
+@login_required
 def create_profile():
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     if user.profile:
@@ -131,8 +127,9 @@ def create_profile():
 
 
 @app.route('/api/profiles/<int:user_id>', methods=['GET'])
+@login_required
 def get_profile(user_id):
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     profile = Profile.query.filter_by(user_id=user_id).first()
@@ -161,8 +158,9 @@ def get_profile(user_id):
 
 
 @app.route('/api/profiles/<int:user_id>', methods=['PUT'])
+@login_required
 def edit_profile(user_id):
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     if user.id != user_id:
@@ -202,8 +200,9 @@ def edit_profile(user_id):
 
 
 @app.route('/api/profiles/<int:user_id>/photo', methods=['POST'])
+@login_required
 def upload_photo(user_id):
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     if user.id != user_id:
@@ -228,8 +227,9 @@ def upload_photo(user_id):
 
 
 @app.route('/api/discover', methods=['GET'])
+@login_required
 def discover():
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     if not user.profile:
@@ -276,8 +276,9 @@ def calculate_match_score(my_profile, other_profile):
 
 
 @app.route('/api/profiles/<int:user_id>/like', methods=['POST'])
+@login_required
 def like_user(user_id):
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     if user.id == user_id:
@@ -317,8 +318,9 @@ def like_user(user_id):
 
 
 @app.route('/api/profiles/<int:user_id>/pass', methods=['POST'])
+@login_required
 def pass_user(user_id):
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     if user.id == user_id:
@@ -340,8 +342,9 @@ def pass_user(user_id):
 
 
 @app.route('/api/matches', methods=['GET'])
+@login_required
 def get_matches():
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     matches = Match.query.filter(
@@ -365,8 +368,9 @@ def get_matches():
 
 
 @app.route('/api/messages', methods=['POST'])
+@login_required
 def send_message():
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     data = request.get_json()
@@ -394,8 +398,9 @@ def send_message():
 
 
 @app.route('/api/matches/<int:match_id>/messages', methods=['GET'])
+@login_required
 def get_messages(match_id):
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     match = Match.query.get(match_id)
@@ -415,8 +420,9 @@ def get_messages(match_id):
 
 
 @app.route('/api/search', methods=['GET'])
+@login_required
 def search_profiles():
-    user = get_current_user()
+    user = current_user
     if not user:
         return jsonify(error="unauthorized", message="Please log in"), 401
     location = request.args.get("location", "").strip()
