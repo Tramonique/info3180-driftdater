@@ -9,95 +9,125 @@ let message = ref("Drift Dater")
       <div class="text-center">
         <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
         <h1>{{ message }}</h1>
-        <p>Your one stop for a good match</p> <!--Optional: From hello to forever—start here.-->
+        <h2>Your one stop for a good match</h2> <!--Optional: From hello to forever—start here.-->
       </div>
       <section>
         <div class="ft">
-          <img src="../assets/Recommended.jpeg" alt="Recommended match" class="WebDetails">
-          <h2 class="subject">Get recommended your perfect match</h2>
-          <p class="text">Our smart matching system learns your preferences, interests, and vibe to connect you 
-            with people who feel naturally compatible. Spend less time searching and more time meeting 
-            meaningful connections that just make sense.</p>
+            <img src="../assets/Recommended.jpeg" alt="Recommended match" class="WebDetails">
+            <div class="info>">
+                <h2 class="subject">Get recommended your perfect match</h2>
+                <p class="text">Our smart matching system learns your preferences, interests, and vibe to connect you 
+                  with people who feel naturally compatible. Spend less time searching and more time meeting 
+                  meaningful connections that just make sense.</p>
+            </div>
         </div>
         <div class="ft">
-          <img src="../assets/Choose.jpg" alt="Like or pass" class="WebDetails">
-          <h2 class="subject">Choose what feels right</h2>
-          <p class="text">Make your choice with confidence using simple actions like: like, dislike, or pass. 
-            Each swipe helps refine your preferences, allowing the app to better understand your type and 
-            improve future match suggestions. It&#x2019;s an easy, intuitive way to stay in control while quickly 
-            discovering people who truly fit your vibe.</p>
+            <img src="../assets/Choose.jpg" alt="Like or pass" class="WebDetails">
+            <div class="info">
+                <h2 class="subject">Choose what feels right</h2>
+                <p class="text">Make your choice with confidence using simple actions like: like, dislike, or pass. 
+                  Each swipe helps refine your preferences, allowing the app to better understand your type and 
+                  improve future match suggestions. It&#x2019;s an easy, intuitive way to stay in control while quickly 
+                  discovering people who truly fit your vibe.</p>
+            </div>
         </div>
         <div class="ft">
-          <img src="../assets/Messaging.jpg" alt="Chat comfortably" class="WebDetails">
-          <h2 class="subject">Smooth messaging</h2>
-          <p class="text">Start conversations naturally and without pressure. Our chat experience is designed to 
-            feel smooth, friendly, and effortless so you can focus on getting to know your match. 
-            Whether it&#x2019;s a quick hello or a deep conversation, connecting has never been 
-            simpler or more comfortable.</p>
+            <img src="../assets/Messaging.jpg" alt="Chat comfortably" class="WebDetails">
+            <div class="info">
+                <h2 class="subject">Smooth messaging</h2>
+                <p class="text">Start conversations naturally and without pressure. Our chat experience is designed to 
+                  feel smooth, friendly, and effortless so you can focus on getting to know your match. 
+                  Whether it&#x2019;s a quick hello or a deep conversation, connecting has never been 
+                  simpler or more comfortable.</p>
+            </div>   
         </div>
         <div class="ft">
-          <img src="../assets/Search.jpg" alt="Search with filters" class="WebDetails">
-          <h2 class="subject">Still not finding the one?</h2>
-          <p class="text">Use our advanced search tools to refine your preferences and discover more compatible 
-            matches. Filter by what matters most to you and take control of your dating experience 
-            to find someone who truly fits your vibe.</p>
+            <img src="../assets/Search.jpg" alt="Search with filters" class="WebDetails">
+            <div class="info">
+                <h2 class="subject">Still not finding the one?</h2>
+                <p class="text">Use our advanced search tools to refine your preferences and discover more compatible 
+                  matches. Filter by what matters most to you and take control of your dating experience 
+                  to find someone who truly fits your vibe.</p>
+            </div>
         </div>
         <div class="ft">
-          <img src="../assets/RightOne.jpg" alt="Find your match" class="WebDetails">
-          <h2 class="subject">Find the right one for you</h2>
-          <p class="text">Find the right one for you with a dating experience designed around your preferences, 
-            personality, and pace. From smart recommendations to easy conversations and advanced 
-            search tools, everything is built to help you connect with people who truly match your 
-            vibe. Your next meaningful connection is just a moment away.</p>
-          </div>
+            <img src="../assets/RightOne.jpg" alt="Find your match" class="WebDetails">
+            <div class="info">
+                <h2 class="subject">Find the right one for you</h2>
+                <p class="text">Find the right one for you with a dating experience designed around your preferences, 
+                  personality, and pace. From smart recommendations to easy conversations and advanced 
+                  search tools, everything is built to help you connect with people who truly match your 
+                  vibe. Your next meaningful connection is just a moment away.</p>
+            </div>
+        </div>
       </section>
     </div>
 </template>
 
 <style scoped>
-/*Area to showcase all the websites features*/ 
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+}
+
+h1{ font-size: 4rem; margin-bottom: 10px;}
+h2{ font-size: 1.6rem; }
+
 section{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  background: #bfa6bf;
-  padding: 5px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 80%;
+    max-width: 1200px;
+    background: #bfa6bf;
+    padding: 5px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 /*Individual feature styling*/
 .ft{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  grid-template-areas: 
-  "image title"
-  "image text";
-
-  gap: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  align-content: center;
   background-color: #bfa6bf;
   padding: 5px;
 }
 
 .WebDetails{
-  grid-area: image;
-  max-width: 100%;
-  height: 60%;
+  width: 300px;
+  aspect-ratio: 1/1;
   object-fit: cover;
   place-self: center;
 }
+
+.info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    gap: 15px;
+    flex: 1;
+}
+
 .subject{
-  grid-area: title;
-  place-self: center;
-  align-self: end;
+  font-weight: bold;
+  margin: 0;
 }
 
 .text{
-  grid-area: text;
-  align-items: start;
+    font-size: 1.4rem;
+    line-height: 1.8;
+    margin: 0;
 }
 
 /*Tablet layout styling (600px - 1024px)*/
@@ -142,10 +172,6 @@ section{
       font-size: 1.7rem;
     }
 
-    p {
-      font-size: 0.95rem;
-    }
-
     .logo {
       width: 90px;
       height: 90px;
@@ -157,12 +183,7 @@ section{
     gap: 15px;
   }
   .ft {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "image"
-      "title"
-      "text";
-
+    flex-direction: column;
     text-align: center;
     justify-items: center;
     padding: 15px;
