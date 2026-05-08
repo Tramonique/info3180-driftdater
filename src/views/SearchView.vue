@@ -223,6 +223,10 @@ onMounted(fetchProfiles)
         padding: 12px;
     }
 
+    .specifications{
+        flex-direction: column;
+    }
+
     .avatar {
         width: 100%;
         max-width: 250px;
