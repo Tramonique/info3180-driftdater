@@ -85,7 +85,7 @@ async function editProfile() {
 
 <template>
     <div class="body">
-        <h1>Create Profile</h1>
+        <h1>Edit Profile</h1>
         <div class="profileCard">
             <div class="labelValue"><label><strong>Full Name</strong></label> <input v-model="full_name" /></div>
             <div class="labelValue"><label><strong>Age</strong></label> <input type="number" v-model.number="age" /></div>
