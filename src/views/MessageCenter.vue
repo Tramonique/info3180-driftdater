@@ -76,9 +76,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.body {
-  padding: 20px;
-}
+.body { padding: 20px; }
 
 .chatContainer {
   max-width: 700px;
@@ -151,6 +149,75 @@ onMounted(() => {
     padding: 10px 20px;
     border-radius: 6px;
     cursor: pointer;
+  }
+}
+
+/*Tablet layout */
+@media (max-width: 1024px) {
+
+  .body { padding: 15px; }
+
+  .chatContainer {
+    max-width: 100%;
+    padding: 18px;
+  }
+
+  .chatBox {  height: 350px; }
+
+  .message { max-width: 75%; }
+
+  .inputArea {
+
+    input { font-size: 0.95rem; }
+
+    button { padding: 10px 16px; }
+  }
+}
+
+/*Phone layout */
+@media (max-width: 600px) {
+
+  .body { padding: 10px; }
+
+  .chatContainer {
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .chatContainer h2 {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .chatBox {
+    height: 300px;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .message {
+    max-width: 90%;
+    padding: 8px;
+    font-size: 0.9rem;
+
+    .senderName { font-size: 0.7rem; }
+
+    .time { font-size: 0.65rem; }
+  }
+
+  .inputArea {
+    flex-direction: column;
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+    }
   }
 }
 </style>

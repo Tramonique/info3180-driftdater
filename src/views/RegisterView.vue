@@ -42,10 +42,8 @@ async function register() {
     <div class="container">
         <h1>Sign up</h1>
         <div class="signupCard">
-            <label>Email</label> 
-            <input v-model="email"/> <br>
-            <label>Password</label> 
-            <input type="password" v-model="Password"/>
+            <label>Email <input v-model="email"/></label> 
+            <label>Password <input type="password" v-model="Password"/></label> 
             <button class="login" @click="register">Sign up</button>
         </div>
     </div>
@@ -58,9 +56,12 @@ async function register() {
     justify-content: center;
     align-items: center;
     gap: 30px;
-    height: 100vh;
+    height: 80vh;
+    max-height: 100vh;
 }
+
 h1{ font-size: 4rem; }
+
 .signupCard{
     display: flex;
     flex-direction: column;
@@ -70,7 +71,8 @@ h1{ font-size: 4rem; }
     background-color: #ffffff;
     border: 1px groove #000000;
     border-radius: 5px;
-    width: 40%;
+    width:50%;
+    min-width: 400px;
     height: 50%;
     padding: 20px;
 }
@@ -79,7 +81,25 @@ button{
     margin-top: 2%;
     background: linear-gradient(to right, #E3A3A3, #FFF1A8)
 }
-label{ font-size: 2rem; }
+label{ 
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 550px;
+    gap: 5px;
+    font-size: 1.1rem; 
+    font-weight: 600;
+    text-align: right;
+}
+
+input{
+    width: 50%;
+    padding: 12px;
+    border: 1px solid #000000;
+    border-radius: 8px;
+    align-self: flex-start;
+}
 
 /*Tablet layout*/
 @media (max-width: 1024px) {

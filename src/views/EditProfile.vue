@@ -16,20 +16,39 @@ function fileUpload(event) {
     photo.value = event.target.files[0]
 }
 
-async function createProfile() {
-    try {
-        const response = await fetch('/api/profiles', {
-            method: 'POST',
+const userId = auth.user.value?.id
+
+async function editProfile() {
+    if (!userId) {
+        router.push('/login')
+        return
+    }
+
+    const updateData = {}
+
+    if (full_name.value.trim())
+        updateData.full_name = full_name.value
+    if (age.value)
+        updateData.age = age.value
+    if (bio.value.trim())
+        updateData.bio = bio.value
+    if (location.value)
+        updateData.location = location.value
+    if (interests.value)
+        updateData.interests = interests.value
+    if (gender.value)
+        updateData.gender = gender.value
+    if(Object.keys(updateData).length === 0){
+        buildErrorMessage.value = 'Need to update a field'
+        return
+    }
+
+    try{
+        const response = await fetch(`/api/profiles/${user_id}`, {
+            method: 'PUT',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                full_name: full_name.value,
-                age: age.value,
-                bio: bio.value,
-                location: location.value,
-                interests: interests.value,
-                gender: gender.value
-            })
+            body: JSON.stringify(updateData)
         })
 
         const data = await response.json()
@@ -37,8 +56,6 @@ async function createProfile() {
             alert(data.message)
             return
         }
-
-        const user_id = auth.user.value?.id
 
         if (photo.value && user_id) {
             const formData = new FormData()
@@ -82,25 +99,10 @@ async function createProfile() {
                 </select>
             </div>
             <div class="labelValue"><label><strong>Occupation</strong></label> <input v-model="bio" /></div>
-            <div class="labelValue"><label><strong>Location</strong></label> 
-                <select v-model="location">
-                    <!--Capitals-->
-                    <option value="Kingston">Kingston</option> <option value="Half Way Tree">Half Way Tree</option> <option value="Spanish Town">Spanish Town</option>
-                    <option value="Morant Bay">Morant Bay</option> <option value="Port Antonio">Port Antonio</option> <option value="Mandeville">Mandeville</option>
-                    <option value="May Pen">May Pen</option> <option value="Savanna-la-Mar">Savanna-la-Mar</option> <option value="Montego Bay">Montego Bay</option>
-                    <option value="Lucea">Lucea</option> <option value="Black River">Black River</option> <option value="Falmouth">Falmouth</option>
-                    <option value="St. Ann's Bay">St. Ann's Bay</option> <option value="Port Maria">Port Maria</option> 
-                    <!--Major Towns-->
-                    <option value="Portmore">Portmore</option> <option value="Ocho Rios">Ocho Rios</option> <option value="Negril">Negril</option> 
-                    <option value="Linstead">Linstead</option> <option value="Old Harbour">Old Harbour</option> <option value="Santa Cruz">Santa Cruz</option> 
-                    <option value="Christiana">Christiana</option> <option value="Ewarton">Ewarton</option> <option value="Bog Walk">Bog Walk</option>
-                    <option value="Yallahs">Yallahs</option> <option value="Annotto Bay">Annotto Bay</option> <option value="Runaway Bay">Runaway Bay</option>
-                    <option value="Discovery Bay">Discovery Bay</option>
-                </select>
-            </div>
+            <div class="labelValue"><label><strong>Location</strong></label> <input v-model="location" /></div>
             <div class="labelValue"><label><strong>Interests</strong></label> <textarea v-model="interests"></textarea></div>
             <div class="labelValue"><label><strong>Picture of Yourself</strong></label> <input type="file" @change="fileUpload" /></div>
-            <button class="create" @click="createProfile">Create Profile</button>
+            <button class="create" @click="editProfile">Edit Profile</button>
         </div>
     </div>
 </template>

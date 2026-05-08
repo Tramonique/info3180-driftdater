@@ -89,6 +89,7 @@ Base URL: `http://localhost:5000`
 #### Register
 - **POST** `/api/register`
 - **Body:** `{ "email": "user@example.com", "password": "password123" }`
+- **Password requirements:** Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number, one symbol, no spaces
 - **Success:** `201` – User registered successfully
 - **Errors:** `400` bad request, `409` email already exists
 
@@ -129,6 +130,8 @@ Base URL: `http://localhost:5000`
         "custom_field_2": "value"
     }
     ```
+- Valid genders: Female, Male, Non-binary, Other, Prefer not to say
+- Valid preferred genders: Any, Female, Male, Non-binary, Other 
 - **Success:** `201` – Profile created successfully
 - **Errors:** `400` missing fields, `401` unauthorized, `409` profile already exists
 
@@ -208,6 +211,7 @@ Base URL: `http://localhost:5000`
     - `location` – filter by location (partial match)
     - `age_min` – minimum age
     - `age_max` – maximum age
+    -  `gender`– filter by gender
     - `interests` – filter by interests (partial match)
 - **Example:** `/api/search?location=Kingston&age_min=18&age_max=30&interests=music`
 - **Success:** `200` – List of matching profiles
