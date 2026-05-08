@@ -1,8 +1,8 @@
-"""Initial models
+"""Initial database schema
 
-Revision ID: 029ac8416e5b
+Revision ID: 3bac10d2778f
 Revises: 
-Create Date: 2026-04-15 21:49:05.637929
+Create Date: 2026-05-07 23:08:41.915399
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '029ac8416e5b'
+revision = '3bac10d2778f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -43,6 +43,7 @@ def upgrade():
     sa.Column('user1_id', sa.Integer(), nullable=False),
     sa.Column('user2_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('seen', sa.Boolean(), server_default='false', nullable=False),
     sa.ForeignKeyConstraint(['user1_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['user2_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -52,6 +53,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('full_name', sa.String(length=100), nullable=False),
     sa.Column('age', sa.Integer(), nullable=False),
+    sa.Column('gender', sa.String(length=30), nullable=False),
     sa.Column('bio', sa.Text(), nullable=False),
     sa.Column('location', sa.String(length=100), nullable=False),
     sa.Column('interests', sa.Text(), nullable=False),
@@ -61,6 +63,7 @@ def upgrade():
     sa.Column('visibility', sa.String(length=20), nullable=False),
     sa.Column('preferred_age_min', sa.Integer(), nullable=True),
     sa.Column('preferred_age_max', sa.Integer(), nullable=True),
+    sa.Column('preferred_gender', sa.String(length=30), nullable=False),
     sa.Column('preferred_location', sa.String(length=100), nullable=True),
     sa.Column('preferred_radius', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -75,6 +78,7 @@ def upgrade():
     sa.Column('receiver_id', sa.Integer(), nullable=False),
     sa.Column('content', sa.Text(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('read', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['match_id'], ['matches.id'], ),
     sa.ForeignKeyConstraint(['receiver_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['sender_id'], ['users.id'], ),
