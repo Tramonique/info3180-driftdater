@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 
 const full_name = ref('')
 const age = ref('')
+const gender = ref('')
 const bio = ref('')
 const location = ref('')
 const interests = ref('')
@@ -26,7 +27,8 @@ async function createProfile() {
                 age: age.value,
                 bio: bio.value,
                 location: location.value,
-                interests: interests.value
+                interests: interests.value,
+                gender: gender.value
             })
         })
 
@@ -70,8 +72,17 @@ async function createProfile() {
         <div class="profileCard">
             <div class="labelValue"><label><strong>Full Name</strong></label> <input v-model="full_name" /></div>
             <div class="labelValue"><label><strong>Age</strong></label> <input type="number" v-model.number="age" /></div>
+            <div class="labelValue"><label><strong>Gender</strong></label> 
+                <select v-model="gender">
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Non-binary">Non-binary</option>
+                    <option value="Other">Other</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+            </div>
             <div class="labelValue"><label><strong>Occupation</strong></label> <input v-model="bio" /></div>
-            <div class="labelValue"><label><strong>Address</strong></label> <input v-model="location" /></div>
+            <div class="labelValue"><label><strong>Location</strong></label> <input v-model="location" /></div>
             <div class="labelValue"><label><strong>Interests</strong></label> <textarea v-model="interests"></textarea></div>
             <div class="labelValue"><label><strong>Picture of Yourself</strong></label> <input type="file" @change="fileUpload" /></div>
             <button class="create" @click="createProfile">Create Profile</button>
@@ -121,7 +132,7 @@ button {
     gap: 20px;
 }
 
-input, textarea {
+input, textarea, select {
     width: 40ch;
 }
 

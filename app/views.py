@@ -188,7 +188,7 @@ def get_profile(user_id):
         visibility=profile.visibility,
         preferred_age_min=profile.preferred_age_min,
         preferred_age_max=profile.preferred_age_max,
-        preffered_gender = profile.preffered_gender
+        preffered_gender = profile.preffered_gender,
         preferred_location=profile.preferred_location,
         preferred_radius=profile.preferred_radius,
         created_at=profile.created_at.isoformat()
