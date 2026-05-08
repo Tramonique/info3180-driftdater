@@ -103,7 +103,7 @@ onMounted(() => {
                         <div class="info">
                             <h3>{{ profile.full_name }}, {{ profile.age }}</h3>
                             <p>{{ profile.interests }}</p>
-                            <p class="matchScore">Match Score: {{ profile.match_score }}</p>
+                            <p class="matchScore">Match Score: {{ profile.location }}</p>
                         </div>
                         <div class="actions">
                             <button class="likeBtn" @click="likeUser(profile.user_id)">Like</button>
@@ -118,7 +118,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-$primary: #6c7ae0;
+$primary: #da8e50;
 $like: #59D972;
 $dislike: #c93232;
 

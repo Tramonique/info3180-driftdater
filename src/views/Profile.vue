@@ -8,6 +8,7 @@ const gender = ref('')
 const bio = ref('')
 const location = ref('')
 const interests = ref('')
+const preferred_gender = ref('')
 const photo = ref(null)
 const router = useRouter()
 const auth = inject('auth')
@@ -28,7 +29,8 @@ async function createProfile() {
                 bio: bio.value,
                 location: location.value,
                 interests: interests.value,
-                gender: gender.value
+                gender: gender.value,
+                preferred_gender: preferred_gender.value
             })
         })
 
@@ -99,6 +101,15 @@ async function createProfile() {
                 </select>
             </div>
             <div class="labelValue"><label><strong>Interests</strong></label> <textarea v-model="interests"></textarea></div>
+            <div class="labelValue"><label><strong>Preferred Gender</strong></label> 
+                <select v-model="preferred_gender">
+                    <option value="Any">Any</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Non-binary">Non-binary</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
             <div class="labelValue"><label><strong>Picture of Yourself</strong></label> <input type="file" @change="fileUpload" /></div>
             <button class="create" @click="createProfile">Create Profile</button>
         </div>

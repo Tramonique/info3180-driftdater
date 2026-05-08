@@ -29,6 +29,12 @@
                                 <RouterLink to="/matches" class="nav-link" exact-active-class="active">Matches</RouterLink>
                             </li>
                             <li class="nav-item">
+                                <RouterLink to="/search" class="nav-link" exact-active-class="active">Search</RouterLink>
+                            </li>
+                            <li class="nav-item">
+                                <RouterLink to="/editprofile" class="nav-link" exact-active-class="active">Edit Profile</RouterLink>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" style="cursor:pointer" @click="handleLogout">Logout</a>
                             </li>
                         </template>
