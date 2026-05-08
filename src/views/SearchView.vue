@@ -115,7 +115,7 @@ onMounted(fetchProfiles)
                         <div class="info">
                             <h3>{{ profile.full_name }}, {{ profile.age }}</h3>
                             <p>{{ profile.interests }}</p>
-                            <p class="matchScore">Match Score: {{ profile.match_score }}</p>
+                            <p class="matchScore">Match Score: {{ Math.round(profile.match_score) }}%</p>
                         </div>
                         <div class="actions">
                             <button class="likeBtn" @click="likeUser(profile.user_id)">Like</button>

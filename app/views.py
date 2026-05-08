@@ -360,34 +360,40 @@ def discover():
             "distance_km": distance,
             "interests": profile.interests,
             "profile_picture": photo_url(profile.profile_picture),
-            # CHANGED: score used only for sorting, never sent to client
+            "match_score": calculate_match_score(user.profile, profile)
         })
-    result.sort(key=lambda x: calculate_match_score(user.profile, Profile.query.filter_by(user_id=x["user_id"]).first()), reverse=True)
+    result.sort(key=lambda x: x["match_score"], reverse=True)
     return jsonify(profiles=result), 200
 
 
 def calculate_match_score(my_profile, other_profile):
     score = 0
-    my_interests = set(i.strip().lower() for i in my_profile.interests.split(","))
-    other_interests = set(i.strip().lower() for i in other_profile.interests.split(","))
+    my_interests = set(i.strip().lower() for i in re.split(r"[,\n;]+", my_profile.interests)
+                       if i.strip())
+    other_interests = set(i.strip().lower() for i in re.split(r"[,\n;]+", other_profile.interests)
+                          if i.strip())
     shared = my_interests & other_interests
     if my_interests:
-        score += (len(shared) / len(my_interests)) * 50
+        score += (len(shared) / len(my_interests)) * 40
+
     if my_profile.preferred_age_min and my_profile.preferred_age_max:
         if my_profile.preferred_age_min <= other_profile.age <= my_profile.preferred_age_max:
-            score += 30
-    if my_profile.preferred_location:
-        if my_profile.preferred_location.lower() in other_profile.location.lower():
             score += 20
+    if (
+        my_profile.preferred_location == "Any"
+        or my_profile.preferred_location == other_profile.location
+    ):
+        score += 15
+
     if my_profile.preferred_gender == "Any" or my_profile.preferred_gender == other_profile.gender:
-        score += 20
+        score += 15
 
     distance = calculate_distance_km(my_profile.location, other_profile.location)
 
     if distance is not None and my_profile.preferred_radius:
         if distance <= my_profile.preferred_radius:
-            score += 20
-    return round(score, 1)
+            score += 10
+    return min(round(score, 1), 100)
 
 
 @app.route('/api/profiles/<int:user_id>/like', methods=['POST'])
@@ -551,8 +557,8 @@ def search_profiles():
         Profile.user_id != user.id,
         Profile.visibility == "public"
     )
-    if location:
-        query = query.filter(Profile.location.ilike(f"%{location}%"))
+    if location and location != "Any":
+        query = query.filter(Profile.location == location)
     if age_min:
         query = query.filter(Profile.age >= age_min)
     if age_max:
