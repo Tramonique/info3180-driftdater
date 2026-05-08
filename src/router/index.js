@@ -7,6 +7,7 @@ import Matches from '../views/Matches.vue'
 import Profile from '../views/Profile.vue'
 import MessageCenter from '../views/MessageCenter.vue'
 import SearchView from '../views/SearchView.vue'
+import EditProfile from '../views/EditProfile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,11 @@ const router = createRouter({
       //Search specific users by a filter
       path: '/search',
       component: SearchView
+    },
+    {
+      //Edit Profile of user
+      path: '/editprofile',
+      component: EditProfile
     }
   ]
 })
