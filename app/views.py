@@ -13,6 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 import re
+import math
 
 
 VALID_GENDERS = ["Female", "Male", "Non-binary", "Other", "Prefer not to say"]
@@ -49,6 +50,63 @@ def validate_password(password):
         errors.append("Password must not contain spaces")
     return errors
 
+
+LOCATION_COORDS = {
+    # Capitals
+    "Kingston": (17.9712, -76.7936),
+    "Half Way Tree": (18.0128, -76.7920),
+    "Spanish Town": (17.9911, -76.9574),
+    "Morant Bay": (17.8815, -76.4093),
+    "Port Antonio": (18.1761, -76.4509),
+    "Mandeville": (18.0417, -77.5071),
+    "May Pen": (17.9645, -77.2453),
+    "Savanna-la-Mar": (18.2189, -78.1332),
+    "Montego Bay": (18.4762, -77.8939),
+    "Lucea": (18.4426, -78.1736),
+    "Black River": (18.0264, -77.8487),
+    "Falmouth": (18.4936, -77.6559),
+    "St. Ann's Bay": (18.4359, -77.2008),
+    "Port Maria": (18.3685, -76.8895),
+
+    # Major Towns
+    "Portmore": (17.9500, -76.8799),
+    "Ocho Rios": (18.4074, -77.1031),
+    "Negril": (18.2683, -78.3472),
+    "Linstead": (18.1368, -77.0317),
+    "Old Harbour": (17.9414, -77.1089),
+    "Santa Cruz": (18.0530, -77.6980),
+    "Christiana": (18.1652, -77.4902),
+    "Ewarton": (18.1800, -77.0856),
+    "Bog Walk": (18.1021, -77.0058),
+    "Yallahs": (17.8748, -76.5624),
+    "Annotto Bay": (18.2717, -76.7650),
+    "Runaway Bay": (18.4586, -77.3201),
+    "Discovery Bay": (18.4633, -77.4075)
+}
+
+
+def calculate_distance_km(location1, location2):
+    if location1 not in LOCATION_COORDS or location2 not in LOCATION_COORDS:
+        return None
+
+    lat1, lon1 = LOCATION_COORDS[location1]
+    lat2, lon2 = LOCATION_COORDS[location2]
+
+    radius = 6371
+
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+
+    a = (
+        math.sin(dlat / 2) ** 2
+        + math.cos(math.radians(lat1))
+        * math.cos(math.radians(lat2))
+        * math.sin(dlon / 2) ** 2
+    )
+
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    return round(radius * c, 1)
 ###
 # Routing for your application.
 ###
@@ -291,6 +349,7 @@ def discover():
     result = []
     for profile in profiles:
         score = calculate_match_score(user.profile, profile)
+        distance = calculate_distance_km(user.profile.location, profile.location)
         result.append({
             "user_id": profile.user_id,
             "full_name": profile.full_name,
@@ -298,6 +357,7 @@ def discover():
             "gender": profile.gender,
             "bio": profile.bio,
             "location": profile.location,
+            "distance_km": distance,
             "interests": profile.interests,
             "profile_picture": photo_url(profile.profile_picture),
             # CHANGED: score used only for sorting, never sent to client
@@ -321,6 +381,12 @@ def calculate_match_score(my_profile, other_profile):
             score += 20
     if my_profile.preferred_gender == "Any" or my_profile.preferred_gender == other_profile.gender:
         score += 20
+
+    distance = calculate_distance_km(my_profile.location, other_profile.location)
+
+    if distance is not None and my_profile.preferred_radius:
+        if distance <= my_profile.preferred_radius:
+            score += 20
     return round(score, 1)
 
 

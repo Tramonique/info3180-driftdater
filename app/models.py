@@ -57,7 +57,7 @@ class Match(db.Model):
     user2_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     # Tracks whether the matched user has seen this match notification. It defaults to False (unseen) when a new match is created
-    seen = db.Column(db.Boolean, default=False, nullable=False)
+    seen = db.Column(db.Boolean, default=False, nullable=False, server_default='false')
 
 
 class Message(db.Model):
