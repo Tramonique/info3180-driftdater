@@ -139,7 +139,7 @@ $dislike: #c93232;
   width: 80px;
   height: 80px;
   border-radius: 10px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .info {
